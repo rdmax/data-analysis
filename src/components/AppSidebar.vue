@@ -1,7 +1,12 @@
 <template>
   <v-container>
+    <v-divider></v-divider>
     <v-btn prepend-icon="mdi-plus" block class="my-4">
-      Add Database (add tooltip)
+      Add Database 
+      <v-tooltip
+        activator="parent"
+        location="bottom"
+      >Coming soon</v-tooltip>
     </v-btn>
     <v-select v-model="selectedDb" :items="databases" label="Select Database"></v-select>
 

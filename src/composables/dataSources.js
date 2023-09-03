@@ -51,5 +51,5 @@ export function useDataSources() {
         })
     })
 
-    return { schema, pk, fullData, resultData, headers }
+    return { schema, pk, fullData, resultData, headers, selectedTable }
 }

@@ -1,109 +1,184 @@
 <template>
-  <v-card>
-    <v-checkbox v-model="selectAllColumns" label="Select All Columns" @change="selectAllColumnsChanged"></v-checkbox>
-    <v-autocomplete v-model="selectedColumns" :items="columns" item-title="name" label="Select Columns" multiple
-      chips></v-autocomplete>
-    <h3>Filter</h3>
-    <v-btn @click="addFilter">Add Filter</v-btn>
-    <div v-for="(filter, index) in filters" :key="index">
-      <v-select v-model="filter.column" :items="columns" item-title="name" label="Select Column" return-object
-        single-line></v-select>
-      <template v-if="filter.column">
-        <v-checkbox v-model="filter.isNull" label="Is Not Null"></v-checkbox>
-        <template v-if="!filter.isNull">
-          <template v-if="filter.column.type === 'Boolean'">
-            <v-radio-group v-model="filter.operator">
-              <v-radio label="True" value="true"></v-radio>
-              <v-radio label="False" value="false"></v-radio>
-            </v-radio-group>
-          </template>
-          <template v-if="filter.column.type === 'String'">
-            <v-text-field v-model="filter.value" label="Filter Value"></v-text-field>
-          </template>
-          <template v-if="filter.column.type === 'Number'">
-            <v-text-field v-model="filter.value" label="Filter Value" type="number"></v-text-field>
-          </template>
+  <v-form>
+    <v-container>
+      <v-row justify="space-between">
+        <v-col>
+          <h4>Columns ({{ selectedColumns.length }})</h4>
+        </v-col>
+        <v-col cols="auto">
+          <v-switch label="Select All Columns" v-model="selectAllColumns" @change="selectAllColumnsChanged"></v-switch>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-autocomplete v-model="selectedColumns" :items="columns" item-title="name" label="Select Columns" multiple
+            chips></v-autocomplete>
+          <v-divider></v-divider>
+        </v-col>
+      </v-row>
+
+      <v-row justify="space-between">
+        <v-col>
+          <h4>Filter</h4>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn prepend-icon="mdi-plus" @click="addFilter" size="small">
+            Add Filter
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-for="(filter, index) in filters" :key="index" justify="space-between">
+        <v-col md="4" sm="12">
+          <v-select v-model="filter.column" :items="columns" item-title="name" label="Select Column" return-object
+            single-line></v-select>
+        </v-col>
+        <template v-if="filter.column">
+          <v-col md="4" cols="12">
+            <v-select v-model="filter.condition" :items="conditions" label="Select condition" item-title="label"
+              return-object single-line></v-select>
+          </v-col>
+          <v-col md="3" cols="12">
+            <v-text-field v-model="filter.value" label="Enter value"></v-text-field>
+          </v-col>
+          <v-col md="1" cols="12">
+            <v-btn icon @click="removeFilter(index)" flat>
+              <v-icon>
+                mdi-delete
+              </v-icon>
+              <v-tooltip activator="parent" location="top">Delete</v-tooltip>
+            </v-btn>
+          </v-col>
         </template>
-      </template>
-    </div>
-    <h3>Sorting</h3>
-    <v-select v-model="selectedSortColumn" :items="columns" item-title="name" label="Select Column"
-      single-line></v-select>
-    <v-radio-group v-model="sortOrder">
-      <v-radio label="Ascending" value="asc"></v-radio>
-      <v-radio label="Descending" value="desc"></v-radio>
-    </v-radio-group>
-    <h3>Columns to show</h3>
-    <v-text-field v-model.number="maxColumns" label="Max Columns"></v-text-field>
-    <v-btn @click="generateQuery">Generate Query</v-btn>
-    <div style="width: 100%;word-break:break-word">
-      <strong>Generated SQL Query:</strong>
-      <pre>{{ generatedQuery }}</pre>
-    </div>
-  </v-card>
+      </v-row>
+      <v-divider class="mt-6 mb-6"></v-divider>
+      <h4>Sorting</h4>
+      <v-select v-model="selectedSortColumn" :items="columns" item-title="name" label="Select Column"
+        single-line></v-select>
+      <v-radio-group v-model="sortOrder">
+        <v-radio label="Ascending" value="asc"></v-radio>
+        <v-radio label="Descending" value="desc"></v-radio>
+      </v-radio-group>
+    </v-container>
+  </v-form>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      selectedTable: 'product',
-      selectAllColumns: false,
-      generatedQuery: '',
-      selectedColumns: [],
-      maxColumns: 1000,
-      selectedSortColumn: null,
-      filters: [],
-      sortOrder: "",
-      columns: [{
-        name: "column1",
-        type: "Boolean"
-      },
-      {
-        name: "column2",
-        type: "String"
-      },
-      {
-        name: "column3",
-        type: "Number"
-      }
-      ],
-    };
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useDataSources } from '@/composables/dataSources'
+import { useSourcesStore } from '@/store/sources'
+
+const connectionsStore = useSourcesStore()
+const { schema, selectedTable } = useDataSources()
+
+const selectAllColumns = ref(false)
+const selectedColumns = ref([])
+const selectedSortColumn = ref('')
+const filters = ref([])
+const sortOrder = ref('')
+
+const conditions = [
+  {
+    label: 'equal to',
+    symbol: '='
   },
-  methods: {
-    generateQuery() {
-      let query = '';
-      if (this.selectedColumns.length === this.columns.length) {
-        query = `SELECT * FROM ${this.selectedTable}`;
-      } else {
-        query = `SELECT ${this.selectedColumns.map(item => item.name).join()} FROM ${this.selectedTable}`;
-      }
-
-
-      if (this.filters.length > 0) {
-        query += " WHERE " + this.filters.map((filter) => {
-          return `${filter.name} ${filter.operator} '${filter.value}'`;
-        }).join(' AND ');
-      }
-
-      if (this.sortOrder === "asc") {
-        query += ` ORDER BY ${this.selectedSortColumn} ASC`;
-      } else if (this.sortOrder === "desc") {
-        query += ` ORDER BY ${this.selectedSortColumn} DESC`;
-      }
-
-      this.generatedQuery = query;
-    },
-    addFilter() {
-      this.filters.push({ column: null, isNull: false, operator: '=', value: null });
-      console.log(this.filters);
-    },
-    selectAllColumnsChanged() {
-      if (this.selectAllColumns) {
-        this.selectedColumns = this.columns;
-      } else {
-        this.selectedColumns = [];
-      }
-    },
+  {
+    label: 'not equal to',
+    symbol: '!='
+  }
+  ,
+  {
+    label: 'greater than',
+    symbol: '>'
   },
-};
+  {
+    label: 'greater than equal to',
+    symbol: '>='
+  },
+  {
+    label: 'less than',
+    symbol: '<'
+  },
+  {
+    label: 'less than equal to',
+    symbol: '<='
+  }
+]
+
+const columns = computed(() => Object.keys(schema.value))
+const generatedSqlQuery = computed(() => {
+  let query = 'SELECT ';
+
+  if (selectAllColumns.value) {
+    query += '* ';
+  } else if (selectedColumns.value.length > 0) {
+    query += `${selectedColumns.value.join(', ')} `;
+  } else {
+    query += '* ';
+  }
+
+  query += `FROM ${selectedTable?.value}`;
+
+  if (filters.value.length > 0) {
+    query += ' WHERE ';
+    filters.value.forEach((filter, index) => {
+      if (index > 0) {
+        query += ' AND ';
+      }
+      const column = filter.column;
+      const condition = filter.condition.symbol;
+      const value = filter.value;
+      query += `${column} ${condition} '${value}' `;
+    });
+  }
+
+  if (selectedSortColumn.value && sortOrder.value) {
+    query += `ORDER BY ${selectedSortColumn.value} ${sortOrder.value}`;
+  }
+
+  console.log(query);
+
+  return query;
+})
+
+function addFilter() {
+  filters.value.push({
+    column: '',
+    condition: '',
+    value: '',
+  });
+}
+function removeFilter(index) {
+  filters.value.splice(index, 1);
+}
+function selectAllColumnsChanged() {
+  if (selectAllColumns.value) {
+    selectedColumns.value = columns.value;
+  } else {
+    selectedColumns.value = [];
+  }
+}
+function resetForm() {
+  selectAllColumns.value = false
+  selectedColumns.value = []
+  selectedSortColumn.value = ''
+  filters.value = []
+  sortOrder.value = ''
+}
+
+watch(selectedColumns, (newValue) => {
+  if (newValue.length !== columns.value.length) {
+    selectAllColumns.value = false
+  }
+}, { immediate: true })
+watch(generatedSqlQuery, (newValue, oldValue) => {
+  if (oldValue !== newValue) {
+    connectionsStore.$patch({
+      selectedQuery: `${generatedSqlQuery.value}`
+    })
+  }
+}, {
+  flush: 'post'
+})
+watch(selectedTable, () => {
+  resetForm()
+}, { immediate: true })
 </script>

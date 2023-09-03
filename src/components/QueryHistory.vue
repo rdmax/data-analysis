@@ -40,9 +40,10 @@ import { storeToRefs } from 'pinia';
 import { useSourcesStore } from '@/store/sources';
 import connectionsData from '../../static/connections'
 
+const SAVED_TAB = 'saved'
 const connectionsStore = useSourcesStore();
 const { templateQueries, selectedTable, selectedConnection, selectedDb, recentQueries } = storeToRefs(connectionsStore);
-const tab = ref('saved');
+const tab = ref(SAVED_TAB);
 const databasesData = connectionsData[selectedConnection.value].databases
 
 function savedClicked(query) {
@@ -55,7 +56,8 @@ function recentClicked(query) {
 }
 
 watch(selectedTable, (current, old) => {
-  const queries = databasesData[selectedDb.value].tables[current].queries
+  const queries = databasesData[selectedDb.value]
+    .tables[current]?.queries || []
   const templateQueries = new Set(queries)
   
   connectionsStore.$patch((state) => {
@@ -63,6 +65,8 @@ watch(selectedTable, (current, old) => {
     state.recentQueries.clear()
     state.selectedQuery = ''
   });
+
+  tab.value = SAVED_TAB
 }, {
   immediate: true,
 })

@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const useSourcesStore = defineStore('sources', () => {
   const selectedConnection = ref('MySQLProd'); // hardcoded
   const selectedDb = ref('Northwind'); // hardcoded
-  const selectedTable = ref('customer')
+  const selectedTable = ref('')
   const templateQueries = ref(new Set())
   const recentQueries = ref(new Set())
   const selectedQuery = ref('')
