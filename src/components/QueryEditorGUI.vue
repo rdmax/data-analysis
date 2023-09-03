@@ -1,35 +1,25 @@
 <template>
-<v-container :disabled="!selectedTable" class="gui-editor">
-  <v-form>
-      <v-toolbar
-        height="60px"
-        :elevation="1"
-        rounded="0">
+  <v-container :disabled="!selectedTable" class="gui-editor">
+    <v-form>
+      <v-toolbar height="60px" :elevation="1" rounded="0">
         <template v-slot:prepend>
           <h3>Build your query</h3>
         </template>
-        <v-divider
-          class="mx-3 align-self-center"
-          length="24"
-          thickness="2"
-          vertical
-        ></v-divider>
-          <v-btn icon @click="dialog = !dialog">
+        <v-divider class="mx-3 align-self-center" length="24" thickness="2" vertical></v-divider>
+        <v-btn icon @click="dialog = !dialog">
           <v-icon>
             mdi-application-settings
           </v-icon>
-          <v-tooltip
-              activator="parent"
-              location="top"
-            >Settings</v-tooltip>
+          <v-tooltip activator="parent" location="top">Settings</v-tooltip>
         </v-btn>
-    </v-toolbar>
+      </v-toolbar>
       <v-row justify="space-between" align="center">
         <v-col>
           <h4 class="columns-heading">Columns ({{ selectedColumns.length }})</h4>
         </v-col>
         <v-col cols="auto">
-          <v-switch style="height: 60px;" label="Select All Columns" v-model="selectAllColumns" @change="selectAllColumnsChanged"></v-switch>
+          <v-switch style="height: 60px;" label="Select All Columns" v-model="selectAllColumns"
+            @change="selectAllColumnsChanged"></v-switch>
         </v-col>
       </v-row>
       <v-row>
@@ -88,8 +78,8 @@
           </v-btn>
         </v-col>
       </v-row>
-  </v-form>
-   <v-dialog v-model="dialog" max-width="600">
+    </v-form>
+    <v-dialog v-model="dialog" max-width="600">
       <v-card>
         <v-card-title>
           Query Editor Settings
@@ -101,12 +91,8 @@
           <v-window v-model="tab">
             <v-window-item value="env">
               <v-form>
-                <v-select
-                  v-model="selectedEnvironment"
-                  :items="environments"
-                  label="Select Environment"
-                  class="mb-4"
-                ></v-select>
+                <v-select v-model="selectedEnvironment" :items="environments" label="Select Environment"
+                  class="mb-4"></v-select>
                 <v-text-field v-model="name" label="Name" class="mb-4"></v-text-field>
                 <v-text-field v-model="email" label="Email" class="mb-4"></v-text-field>
                 <v-text-field v-model="phone" label="Phone" class="mb-4"></v-text-field>
@@ -230,7 +216,6 @@ function selectAllColumnsChanged() {
     selectedColumns.value = [];
   }
 }
-
 function resetForm() {
   selectAllColumns.value = false
   selectedColumns.value = []
@@ -258,7 +243,7 @@ watch(selectedTable, () => {
 }, { immediate: true })
 </script>
 <style>
-  .gui-editor .columns-heading {
-    line-height: 60px;
-  }
+.gui-editor .columns-heading {
+  line-height: 60px;
+}
 </style>

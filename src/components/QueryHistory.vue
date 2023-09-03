@@ -8,7 +8,8 @@
       <v-window-item value="recent">
         <v-card class="mx-auto">
           <v-list density="comfortable">
-            <v-list-item v-for="(query, i) in [...recentQueries]" :key="i" :value="query" color="primary" @click="recentClicked(query)">
+            <v-list-item v-for="(query, i) in [...recentQueries]" :key="i" :value="query" color="primary"
+              @click="recentClicked(query)">
               <v-list-item-title v-text="query"></v-list-item-title>
             </v-list-item>
           </v-list>
@@ -17,7 +18,8 @@
       <v-window-item value="saved">
         <v-card class="mx-auto">
           <v-list density="comfortable">
-            <v-list-item v-for="(query, i) in [...templateQueries]" :key="i" :value="query" color="primary" @click="savedQueryClicked(query)">
+            <v-list-item v-for="(query, i) in [...templateQueries]" :key="i" :value="query" color="primary"
+              @click="savedQueryClicked(query)">
               <v-list-item-title v-text="query"></v-list-item-title>
             </v-list-item>
           </v-list>
@@ -55,7 +57,7 @@ watch(selectedTable, (current, old) => {
   const queries = databasesData[selectedDb.value]
     .tables[current]?.queries || []
   const templateQueries = new Set(queries)
-  
+
   connectionsStore.$patch((state) => {
     state.templateQueries = templateQueries
     state.recentQueries.clear()

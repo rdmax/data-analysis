@@ -19,7 +19,7 @@
                       <p>{{ dummyLink }}</p>
                     </v-col>
                     <v-col cols="auto">
-                      <v-btn flat icon @click="copyLink">
+                      <v-btn flat icon>
                         <v-icon>
                           mdi-content-copy
                         </v-icon>
@@ -133,9 +133,7 @@ async function exportCSV() {
     delimiter: ',',
     headers: Object.keys(schema.value)
   }
-  const result = await csvDownload(dataToConvert)
-
-  console.log(result)
+  await csvDownload(dataToConvert)
 }
 
 function exportExcel() {
@@ -158,8 +156,5 @@ function exportExcel() {
   }
 
   xlsx(data, settings)
-}
-function copyLink() {
-  console.log('link copied')
 }
 </script>

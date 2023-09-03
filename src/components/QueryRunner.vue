@@ -51,7 +51,7 @@
       </v-col>
     </v-row>
     <v-navigation-drawer v-model="historyDrawer" location="bottom" temporary>
-      <QueryHistory @query-selected="showHideHistoryDrawer"/>
+      <QueryHistory @query-selected="showHideHistoryDrawer" />
     </v-navigation-drawer>
   </v-container>
 </template>
@@ -83,8 +83,6 @@ function addQueryToRecent(query) {
 }
 
 function runQuery() {
-  console.log(`Execute query ${selectedQuery.value}`)
-
   if (!selectedQuery.value.length) {
     queryErrorText.value = 'Query can not be empty'
     showQueryError.value = true

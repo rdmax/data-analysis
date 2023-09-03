@@ -1,5 +1,5 @@
 <template>
-<v-container fluid>
+  <v-container fluid>
     <v-row no-gutters>
       <v-col>
         <QueryRunner />
@@ -9,5 +9,5 @@
 </template>
 
 <script setup>
-  import QueryRunner from '@/components/QueryRunner.vue'
+import QueryRunner from '@/components/QueryRunner.vue'
 </script>
