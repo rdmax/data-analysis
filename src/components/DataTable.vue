@@ -1,6 +1,6 @@
 <template>
   <div class="table-wrapper">
-    <p class="px-5 mt-2 bg-grey-lighten-4">Total results (20)</p>
+    <p class="px-5 mt-2 bg-grey-lighten-4">Total results ({{resultData.length}}). Query executed in {{ getRndInteger(5, 30) }} ms</p>
     <v-data-table-virtual
       :headers="headers"
       :items="resultData"
@@ -13,6 +13,7 @@
 </template>
 <script setup>
 import { useDataSources } from '@/composables/dataSources'
+import { getRndInteger } from '@/utils/math'
 
 const { pk, resultData, headers } = useDataSources()
 </script>

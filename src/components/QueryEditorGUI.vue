@@ -3,6 +3,11 @@
     <v-container>
       <v-row justify="space-between">
         <v-col>
+          <h3>Build your query</h3>
+        </v-col>
+      </v-row>
+      <v-row justify="space-between">
+        <v-col>
           <h4>Columns ({{ selectedColumns.length }})</h4>
         </v-col>
         <v-col cols="auto">
@@ -16,7 +21,6 @@
           <v-divider></v-divider>
         </v-col>
       </v-row>
-
       <v-row justify="space-between">
         <v-col>
           <h4>Filter</h4>
@@ -58,6 +62,13 @@
         <v-radio label="Ascending" value="asc"></v-radio>
         <v-radio label="Descending" value="desc"></v-radio>
       </v-radio-group>
+      <v-row justify="space-between">
+        <v-col>
+          <v-btn @click="resetForm">
+            Reset
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
   </v-form>
 </template>

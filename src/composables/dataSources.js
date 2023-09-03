@@ -2,14 +2,13 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useSourcesStore } from '@/store/sources'
+import { getRndInteger } from '@/utils/math'
 import connectionsData from '../../static/connections'
 
 const connectionsStore = useSourcesStore()
 const { selectedTable, selectedConnection, selectedDb, fakeQueryResults } = storeToRefs(connectionsStore)
 
-function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+
 function getTableData() {
     return connectionsData[selectedConnection.value]
         .databases[selectedDb.value].tables[selectedTable.value]
