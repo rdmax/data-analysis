@@ -1,17 +1,35 @@
 <template>
-  <v-form :disabled="!selectedTable">
-    <v-container>
-      <v-row justify="space-between">
-        <v-col>
+<v-container :disabled="!selectedTable" class="gui-editor">
+  <v-form>
+      <v-toolbar
+        height="60px"
+        :elevation="1"
+        rounded="0">
+        <template v-slot:prepend>
           <h3>Build your query</h3>
-        </v-col>
-      </v-row>
-      <v-row justify="space-between">
+        </template>
+        <v-divider
+          class="mx-3 align-self-center"
+          length="24"
+          thickness="2"
+          vertical
+        ></v-divider>
+          <v-btn icon @click="dialog = !dialog">
+          <v-icon>
+            mdi-application-settings
+          </v-icon>
+          <v-tooltip
+              activator="parent"
+              location="top"
+            >Settings</v-tooltip>
+        </v-btn>
+    </v-toolbar>
+      <v-row justify="space-between" align="center">
         <v-col>
-          <h4>Columns ({{ selectedColumns.length }})</h4>
+          <h4 class="columns-heading">Columns ({{ selectedColumns.length }})</h4>
         </v-col>
         <v-col cols="auto">
-          <v-switch label="Select All Columns" v-model="selectAllColumns" @change="selectAllColumnsChanged"></v-switch>
+          <v-switch style="height: 60px;" label="Select All Columns" v-model="selectAllColumns" @change="selectAllColumnsChanged"></v-switch>
         </v-col>
       </v-row>
       <v-row>
@@ -62,15 +80,53 @@
         <v-radio label="Ascending" value="asc"></v-radio>
         <v-radio label="Descending" value="desc"></v-radio>
       </v-radio-group>
-      <v-row justify="space-between">
+      <v-divider class="my-6"></v-divider>
+      <v-row>
         <v-col>
           <v-btn @click="resetForm">
             Reset
           </v-btn>
         </v-col>
       </v-row>
-    </v-container>
   </v-form>
+   <v-dialog v-model="dialog" max-width="600">
+      <v-card>
+        <v-card-title>
+          Query Editor Settings
+          <v-tabs v-model="tab" class="mb-2">
+            <v-tab value="env">Environment Variable</v-tab>
+          </v-tabs>
+        </v-card-title>
+        <v-card-text>
+          <v-window v-model="tab">
+            <v-window-item value="env">
+              <v-form>
+                <v-select
+                  v-model="selectedEnvironment"
+                  :items="environments"
+                  label="Select Environment"
+                  class="mb-4"
+                ></v-select>
+                <v-text-field v-model="name" label="Name" class="mb-4"></v-text-field>
+                <v-text-field v-model="email" label="Email" class="mb-4"></v-text-field>
+                <v-text-field v-model="phone" label="Phone" class="mb-4"></v-text-field>
+                <v-text-field v-model="city" label="City" class="mb-4"></v-text-field>
+              </v-form>
+            </v-window-item>
+          </v-window>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="dialog = !dialog"  color="error">
+            Cancel
+          </v-btn>
+          <v-btn color="primary">
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 <script setup>
 import { ref, computed, watch } from 'vue'
@@ -86,6 +142,14 @@ const selectedColumns = ref([])
 const selectedSortColumn = ref('')
 const filters = ref([])
 const sortOrder = ref('')
+const dialog = ref(false)
+const tab = ref(null)
+const environments = ref(['Production', 'Development', 'Staging'])
+const selectedEnvironment = ref(null)
+const name = ref(null)
+const email = ref(null)
+const phone = ref(null)
+const city = ref(null)
 
 const conditions = [
   {
@@ -146,8 +210,6 @@ const generatedSqlQuery = computed(() => {
     query += `ORDER BY ${selectedSortColumn.value} ${sortOrder.value}`;
   }
 
-  console.log(query);
-
   return query;
 })
 
@@ -168,6 +230,7 @@ function selectAllColumnsChanged() {
     selectedColumns.value = [];
   }
 }
+
 function resetForm() {
   selectAllColumns.value = false
   selectedColumns.value = []
@@ -194,3 +257,8 @@ watch(selectedTable, () => {
   resetForm()
 }, { immediate: true })
 </script>
+<style>
+  .gui-editor .columns-heading {
+    line-height: 60px;
+  }
+</style>

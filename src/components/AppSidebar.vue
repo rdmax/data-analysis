@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-select v-model="selectedProvider" :items="providers" label="Select Database Provider"></v-select>
     <v-divider></v-divider>
     <v-btn prepend-icon="mdi-plus" block class="my-4">
       Add Database 
@@ -35,8 +36,10 @@ const {
 } = storeToRefs(connectionsStore)
 
 const searchQuery = ref('');
+const selectedProvider = ref('MongoDB')
 const databasesData = connectionsData[selectedConnection.value].databases
 const databases = computed(() => Object.keys(databasesData))
+const providers = ref(['MongoDB', 'CouchDB', 'PostgreSQL'])
 const tables = computed(() => Object.keys(databasesData[selectedDb.value].tables))
 const filteredTables = computed(() => {
   return tables.value.filter(table =>

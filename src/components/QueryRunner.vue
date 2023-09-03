@@ -33,22 +33,25 @@
               <v-tooltip activator="parent" location="top">Clear</v-tooltip>
             </v-btn>
           </template>
-          <template v-if="$vuetify.display.smAndUp">
-            <v-divider class="mx-3 align-self-center" length="24" thickness="2" vertical></v-divider>
-
-            <v-btn icon @click.stop="historyDrawer = !historyDrawer">
-              <v-icon>
-                mdi-history
-              </v-icon>
-              <v-tooltip activator="parent" location="top">History</v-tooltip>
-            </v-btn>
-          </template>
         </v-toolbar>
         <v-alert closable :text="queryErrorText" type="error" v-if=showQueryError @click:close=resetQueryAlert></v-alert>
+        <v-card class="my-5">
+          <v-list density="compact">
+            <v-list-item @click.stop="showHideHistoryDrawer">
+              <template v-slot:prepend>
+                <v-icon icon="mdi-history"></v-icon>
+              </template>
+              <v-list-item-title v-text="'Show History'"></v-list-item-title>
+              <template v-slot:append>
+                <v-icon icon="mdi-menu-right"></v-icon>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-card>
       </v-col>
     </v-row>
-    <v-navigation-drawer v-model="historyDrawer" location="right">
-      <QueryHistory />
+    <v-navigation-drawer v-model="historyDrawer" location="right" temporary>
+      <QueryHistory @query-selected="showHideHistoryDrawer"/>
     </v-navigation-drawer>
   </v-container>
 </template>
@@ -66,17 +69,19 @@ const { selectedQuery, fakeQueryResults, selectedTable } = storeToRefs(connectio
 
 const showQueryError = ref(false)
 const queryErrorText = ref('')
-const historyDrawer = ref(true)
+const historyDrawer = ref(false)
 
 function resetQueryAlert() {
   queryErrorText.value = ''
   showQueryError.value = false
 }
+
 function addQueryToRecent(query) {
   connectionsStore.$patch((state) => {
     state.recentQueries.add(query)
   })
 }
+
 function runQuery() {
   console.log(`Execute query ${selectedQuery.value}`)
 
@@ -91,22 +96,27 @@ function runQuery() {
 
   fakeQueryResults.value = true
 }
+
 function clearQuery() {
   fakeQueryResults.value = false
   selectedQuery.value = ''
+}
+
+function showHideHistoryDrawer() {
+  return historyDrawer.value = !historyDrawer.value;
 }
 
 watch([selectedQuery, selectedTable], () => {
   resetQueryAlert()
 })
 </script>
-<style scoped>
+<style>
 .query-runner {
   padding: 0;
 }
 
-.query-textarea {
-  background: #000;
+.v-input__details {
+  display: none;
 }
 
 .editor-gui {
