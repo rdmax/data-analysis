@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form :disabled="!selectedTable">
     <v-container>
       <v-row justify="space-between">
         <v-col>
@@ -26,7 +26,7 @@
           <h4>Filter</h4>
         </v-col>
         <v-col cols="auto">
-          <v-btn prepend-icon="mdi-plus" @click="addFilter" size="small">
+          <v-btn prepend-icon="mdi-plus" @click="addFilter" size="small" :disabled="!selectedTable">
             Add Filter
           </v-btn>
         </v-col>

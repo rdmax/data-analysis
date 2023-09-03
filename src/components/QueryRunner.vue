@@ -5,46 +5,46 @@
         <QueryEditorGUI class="editor-gui" />
       </v-col>
       <v-col sm="4" cols="12">
-        <v-alert closable :text="queryErrorText" type="error" v-if=showQueryError @click:close=resetQueryAlert></v-alert>
         <v-textarea color="black" label="Sql query" v-model="selectedQuery" autofocus></v-textarea>
         <v-toolbar height="60px" :elevation="1" rounded="0">
-      <template v-slot:prepend>
-        <v-btn icon @click="runQuery">
-          <v-icon>
-            mdi-play
-          </v-icon>
-          <v-tooltip activator="parent" location="top">Execute</v-tooltip>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>
-            mdi-content-save
-          </v-icon>
-          <v-tooltip activator="parent" location="top">Save (wip)</v-tooltip>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>
-            mdi-content-copy
-          </v-icon>
-          <v-tooltip activator="parent" location="top">Copy (wip)</v-tooltip>
-        </v-btn>
-        <v-btn icon @click="clearQuery">
-          <v-icon>
-            mdi-rotate-left
-          </v-icon>
-          <v-tooltip activator="parent" location="top">Clear</v-tooltip>
-        </v-btn>
-      </template>
-      <template v-if="$vuetify.display.smAndUp">
-        <v-divider class="mx-3 align-self-center" length="24" thickness="2" vertical></v-divider>
+          <template v-slot:prepend>
+            <v-btn icon @click="runQuery">
+              <v-icon>
+                mdi-play
+              </v-icon>
+              <v-tooltip activator="parent" location="top">Execute</v-tooltip>
+            </v-btn>
+            <v-btn icon>
+              <v-icon>
+                mdi-content-save
+              </v-icon>
+              <v-tooltip activator="parent" location="top">Save (wip)</v-tooltip>
+            </v-btn>
+            <v-btn icon>
+              <v-icon>
+                mdi-content-copy
+              </v-icon>
+              <v-tooltip activator="parent" location="top">Copy (wip)</v-tooltip>
+            </v-btn>
+            <v-btn icon @click="clearQuery">
+              <v-icon>
+                mdi-rotate-left
+              </v-icon>
+              <v-tooltip activator="parent" location="top">Clear</v-tooltip>
+            </v-btn>
+          </template>
+          <template v-if="$vuetify.display.smAndUp">
+            <v-divider class="mx-3 align-self-center" length="24" thickness="2" vertical></v-divider>
 
-        <v-btn icon @click.stop="historyDrawer = !historyDrawer">
-          <v-icon>
-            mdi-history
-          </v-icon>
-          <v-tooltip activator="parent" location="top">History</v-tooltip>
-        </v-btn>
-      </template>
-    </v-toolbar>
+            <v-btn icon @click.stop="historyDrawer = !historyDrawer">
+              <v-icon>
+                mdi-history
+              </v-icon>
+              <v-tooltip activator="parent" location="top">History</v-tooltip>
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-alert closable :text="queryErrorText" type="error" v-if=showQueryError @click:close=resetQueryAlert></v-alert>
       </v-col>
     </v-row>
     <v-navigation-drawer v-model="historyDrawer" location="right">
