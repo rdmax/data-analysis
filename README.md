@@ -1,5 +1,6 @@
-# essentials
+# Links
 
+Check the deployed [verison](https://data-analysis-rdmax.vercel.app)
 Check the project [wiki](https://github.com/rdmax/data-analysis/wiki/Data-analysis-tool-task)
 
 ## Project setup
