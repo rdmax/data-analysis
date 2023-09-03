@@ -7,6 +7,9 @@
       <v-btn href="https://github.com/rdmax/data-analysis#readme" target="_blank">
         Readme
       </v-btn>
+      <v-btn href="https://github.com/rdmax/data-analysis/wiki/Data-analysis-tool-task" target="_blank">
+        Wiki
+      </v-btn>
       <v-btn href="https://github.com/rdmax/data-analysis" target="_blank" icon>
         <v-icon>mdi-github</v-icon>
       </v-btn>

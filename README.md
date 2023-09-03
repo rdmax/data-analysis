@@ -1,5 +1,7 @@
 # essentials
 
+Check the project [wiki](https://github.com/rdmax/data-analysis/wiki/Data-analysis-tool-task)
+
 ## Project setup
 
 ```
