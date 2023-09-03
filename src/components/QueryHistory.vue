@@ -20,7 +20,7 @@
       <v-window-item value="saved">
         <v-card class="mx-auto">
           <v-list density="compact">
-            <v-list-item v-for="(query, i) in [...templateQueries]" :key="i" :value="query" color="primary" @click="savedClicked(query)">
+            <v-list-item v-for="(query, i) in [...templateQueries]" :key="i" :value="query" color="primary" @click="savedQueryClicked(query)">
               <template v-slot:prepend>
                 <v-icon icon="play"></v-icon>
               </template>
@@ -46,13 +46,13 @@ const { templateQueries, selectedTable, selectedConnection, selectedDb, recentQu
 const tab = ref(SAVED_TAB);
 const databasesData = connectionsData[selectedConnection.value].databases
 
-function savedClicked(query) {
+function savedQueryClicked(query) {
   connectionsStore.$patch({
     selectedQuery: query
   });
 }
 function recentClicked(query) {
-  savedClicked(query)
+  savedQueryClicked(query)
 }
 
 watch(selectedTable, (current, old) => {
