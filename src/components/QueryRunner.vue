@@ -50,7 +50,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-navigation-drawer v-model="historyDrawer" location="right" temporary>
+    <v-navigation-drawer v-model="historyDrawer" location="bottom" temporary>
       <QueryHistory @query-selected="showHideHistoryDrawer"/>
     </v-navigation-drawer>
   </v-container>
