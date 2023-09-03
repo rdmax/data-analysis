@@ -45,7 +45,8 @@ const databasesData = connectionsData[selectedConnection.value].databases
 
 function savedQueryClicked(query) {
   connectionsStore.$patch({
-    selectedQuery: query
+    selectedQuery: query,
+    fakeQueryResults: false,
   });
   emit('querySelected');
 }
