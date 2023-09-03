@@ -1,0 +1,69 @@
+<template>
+  <v-card>
+    <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="left">
+      <v-tab value="recent">Recent</v-tab>
+      <v-tab value="saved">Saved Queries</v-tab>
+    </v-tabs>
+    <v-window v-model="tab">
+      <v-window-item value="recent">
+        <v-card class="mx-auto">
+          <v-list density="compact">
+            <v-list-item v-for="(query, i) in [...recentQueries]" :key="i" :value="query" color="primary" @click="recentClicked(query)">
+              <template v-slot:prepend>
+                <v-icon icon="mdi-play" />
+              </template>
+              <v-list-item-title v-text="query"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-window-item>
+      <v-window-item value="saved">
+        <v-card class="mx-auto">
+          <v-list density="compact">
+            <v-list-item v-for="(query, i) in [...templateQueries]" :key="i" :value="query" color="primary" @click="savedClicked(query)">
+              <template v-slot:prepend>
+                <v-icon icon="play"></v-icon>
+              </template>
+
+              <v-list-item-title v-text="query"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-window-item>
+    </v-window>
+  </v-card>
+</template>
+<script setup>
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useSourcesStore } from '@/store/sources';
+import connectionsData from '../../static/connections'
+
+const connectionsStore = useSourcesStore();
+const { templateQueries, selectedTable, selectedConnection, selectedDb, recentQueries } = storeToRefs(connectionsStore);
+const tab = ref('saved');
+const databasesData = connectionsData[selectedConnection.value].databases
+
+function savedClicked(query) {
+  connectionsStore.$patch({
+    selectedQuery: query
+  });
+}
+function recentClicked(query) {
+  savedClicked(query)
+}
+
+watch(selectedTable, (current, old) => {
+  const queries = databasesData[selectedDb.value].tables[current].queries
+  const templateQueries = new Set(queries)
+  
+  connectionsStore.$patch((state) => {
+    state.templateQueries = templateQueries
+    state.recentQueries.clear()
+    state.selectedQuery = ''
+  });
+}, {
+  immediate: true,
+})
+</script>
