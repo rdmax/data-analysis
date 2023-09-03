@@ -4,10 +4,10 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>SQL Editor</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn>
+      <v-btn href="https://github.com/rdmax/data-analysis#readme" target="_blank">
         Readme
       </v-btn>
-      <v-btn icon>
+      <v-btn href="https://github.com/rdmax/data-analysis" target="_blank" icon>
         <v-icon>mdi-github</v-icon>
       </v-btn>
     </v-app-bar>
